@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using VueShopServer.Api.Entities;
+using VueShopServer.Api.Module;
 
 namespace VueShopServer.Api.Services
 {

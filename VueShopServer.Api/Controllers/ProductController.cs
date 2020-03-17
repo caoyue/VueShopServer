@@ -1,33 +1,47 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using VueShopServer.Api.Services;
 using VueShopServer.Api.Entities;
+using VueShopServer.Api.Module;
 
 namespace VueShopServer.Api.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly ILogger<ProductController> _logger;
         private readonly IProductService _productService;
 
-        public ProductController(ILogger<ProductController> logger, IProductService productService)
-        {
-            _logger = logger;
+        public ProductController(IProductService productService) =>
             _productService = productService;
+
+
+        [HttpGet("{id:int}")]
+        public ActionResult<ApiResult<Product>> GetById(int id)
+        {
+            var result = new ApiResult<Product>();
+            var product = _productService.GetProductById(id);
+            if (product == null)
+            {
+                result.Success = false;
+                result.Message = "Product not found.";
+                return NotFound(result);
+            }
+            result.Success = true;
+            result.Result = product;
+            return Ok(result);
+
         }
 
-        [HttpGet("/product/list/{page:int}")]
-        public List<Product> List(int page = 1)
+        [HttpGet("list/{page:int}")]
+        public ActionResult<ApiResult<List<Product>>> List(int page = 1)
         {
-            return _productService.GetProducts(page);
+            var result = new ApiResult<List<Product>>();
+            var products = _productService.GetProducts(page);
+            result.Success = true;
+            result.Result = products;
+            return Ok(result);
         }
 
-        [HttpGet("product/{id:int}")]
-        public Product GetById(int id)
-        {
-            return _productService.GetProductById(id);
-        }
     }
 }

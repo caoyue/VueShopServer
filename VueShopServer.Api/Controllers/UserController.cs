@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using VueShopServer.Api.Entities;
 using VueShopServer.Api.Module;
 using VueShopServer.Api.Services;
+using VueShopServer.Api.Utils;
 
 namespace VueShopServer.Api.Controllers
 {
@@ -19,20 +20,16 @@ namespace VueShopServer.Api.Controllers
         {
             var result = new ApiResult<AuthUser>();
             var u = _userService.GetUserByName(user.Username);
-            if (u != null)
+            if (u.IsNull())
             {
-                result.Success = false;
-                result.Message = "Username has been taken.";
+                u = _userService.Add(user);
+                var token = _userService.GenerateToken(u);
+                result.Success = true;
+                result.Result = u.ToAuthUser(token);
                 return Ok(result);
             }
-            u = _userService.Add(user);
-            var token = _userService.GenerateToken(u);
-            result.Success = true;
-            result.Result = new AuthUser
-            {
-                Username = u.Username,
-                Token = token
-            };
+            result.Success = false;
+            result.Message = "Username has been taken.";
             return Ok(result);
         }
 

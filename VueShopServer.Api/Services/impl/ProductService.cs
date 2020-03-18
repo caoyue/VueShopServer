@@ -15,6 +15,13 @@ namespace VueShopServer.Api.Services.Impl
             Init();
         }
 
+        public List<Product> GetProducts(int page = 1)
+            => _productRepository.AsQueryable.ToList();
+
+
+        public Product GetProductById(int id)
+            => _productRepository.AsQueryable.FirstOrDefault(p => p.Id == id);
+
         private void Init()
         {
             if (!_productRepository.AsQueryable.Any())
@@ -37,12 +44,5 @@ namespace VueShopServer.Api.Services.Impl
                 });
             }
         }
-
-        public List<Product> GetProducts(int page = 1)
-            => _productRepository.AsQueryable.ToList();
-
-
-        public Product GetProductById(int id)
-            => _productRepository.AsQueryable.FirstOrDefault(p => p.Id == id);
     }
 }

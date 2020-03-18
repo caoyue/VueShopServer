@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using VueShopServer.Api.Services;
 using VueShopServer.Api.Entities;
 using VueShopServer.Api.Module;
 
 namespace VueShopServer.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductController : ControllerBase

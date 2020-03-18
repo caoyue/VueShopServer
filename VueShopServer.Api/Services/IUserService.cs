@@ -11,7 +11,7 @@ namespace VueShopServer.Api.Services
 
         User Add(User user);
 
-        bool ValidatePassword(User user);
+        bool ValidatePassword(User user, string password);
 
         string GenerateToken(User user);
     }

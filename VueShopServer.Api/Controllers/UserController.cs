@@ -21,60 +21,58 @@ namespace VueShopServer.Api.Controllers
         [HttpPost("register")]
         public ActionResult<ApiResult<AuthUser>> Register(User user)
         {
-            var result = new ApiResult<AuthUser>();
+            var response = new ApiResult<AuthUser>();
             var u = _userService.GetUserByName(user.Username);
             if (u.IsNull())
             {
                 u = _userService.Add(user);
                 var token = _userService.GenerateToken(u);
-                result.Success = true;
-                result.Result = u.ToAuthUser(token);
-                return Ok(result);
+                response.Success = true;
+                response.Result = u.ToAuthUser(token);
+                return Ok(response);
             }
-            result.Success = false;
-            result.Message = "Username has been taken.";
-            return Ok(result);
+            response.Success = false;
+            response.Message = "Username has been taken.";
+            return Ok(response);
         }
 
         [HttpPost("login")]
         public ActionResult<ApiResult<AuthUser>> Login(User user)
         {
-            var result = new ApiResult<AuthUser>();
-            if (!_userService.ValidatePassword(user))
+            var response = new ApiResult<AuthUser>();
+            var u = _userService.GetUserByName(user.Username);
+
+            if (u.IsNull() || !_userService.ValidatePassword(u, user.Password))
             {
-                result.Success = false;
-                result.Message = "Login failed.";
-                return Ok(result);
+                response.Success = false;
+                response.Message = "Login failed.";
+                return Ok(response);
             }
 
-            result.Success = true;
-            result.Result = new AuthUser
-            {
-                Username = user.Username,
-                Token = _userService.GenerateToken(user)
-            };
-            return Ok(result);
+            response.Success = true;
+            response.Result = u.ToAuthUser(_userService.GenerateToken(u));
+            return Ok(response);
         }
 
         [Authorize]
         [HttpGet("profile")]
         public ActionResult<ApiResult<AuthUser>> Profile()
         {
-            var result = new ApiResult<User>();
+            var response = new ApiResult<AuthUser>();
             var claim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
             if (!claim.IsNull() && int.TryParse(claim.Value, out var id))
             {
                 var u = _userService.GetUserById(id);
                 if (!u.IsNull())
                 {
-                    result.Success = true;
-                    result.Result = u.ToAuthUser("");
-                    return Ok(result);
+                    response.Success = true;
+                    response.Result = u.ToAuthUser("");
+                    return Ok(response);
                 }
             }
-            result.Success = false;
-            result.Message = "Invalid request, please login first.";
-            return BadRequest(result);
+            response.Success = false;
+            response.Message = "Invalid request, please login first.";
+            return Unauthorized(response);
         }
     }
 }

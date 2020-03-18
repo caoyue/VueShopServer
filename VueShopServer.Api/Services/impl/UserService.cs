@@ -29,11 +29,8 @@ namespace VueShopServer.Api.Services.Impl
             _userRepository.AsQueryable
             .FirstOrDefault(u => u.Username == username);
 
-        public bool ValidatePassword(User user)
-        {
-            var u = GetUserByName(user.Username);
-            return u != null && PasswordValid(u.Password, user.Password);
-        }
+        public bool ValidatePassword(User user, string password) =>
+            PasswordValid(user.Password, password);
 
         public User Add(User user)
         {

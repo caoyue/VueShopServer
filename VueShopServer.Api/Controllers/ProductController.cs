@@ -21,28 +21,28 @@ namespace VueShopServer.Api.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<ApiResult<Product>> GetById(int id)
         {
-            var result = new ApiResult<Product>();
+            var response = new ApiResult<Product>();
             var product = _productService.GetProductById(id);
             if (product == null)
             {
-                result.Success = false;
-                result.Message = "Product not found.";
-                return NotFound(result);
+                response.Success = false;
+                response.Message = "Product not found.";
+                return NotFound(response);
             }
-            result.Success = true;
-            result.Result = product;
-            return Ok(result);
+            response.Success = true;
+            response.Result = product;
+            return Ok(response);
 
         }
 
         [HttpGet("list/{page:int}")]
         public ActionResult<ApiResult<List<Product>>> List(int page = 1)
         {
-            var result = new ApiResult<List<Product>>();
+            var response = new ApiResult<List<Product>>();
             var products = _productService.GetProducts(page);
-            result.Success = true;
-            result.Result = products;
-            return Ok(result);
+            response.Success = true;
+            response.Result = products;
+            return Ok(response);
         }
 
     }

@@ -22,6 +22,9 @@ namespace VueShopServer.Api.Services.Impl
             _appSetting = appSetting.Value;
         }
 
+        public User GetUserById(int id) =>
+            _userRepository.Get(id);
+
         public User GetUserByName(string username) =>
             _userRepository.AsQueryable
             .FirstOrDefault(u => u.Username == username);

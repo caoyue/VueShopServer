@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VueShopServer.Api.Entities;
 using VueShopServer.Api.Module;
@@ -51,6 +54,27 @@ namespace VueShopServer.Api.Controllers
                 Token = _userService.GenerateToken(user)
             };
             return Ok(result);
+        }
+
+        [Authorize]
+        [HttpGet("profile")]
+        public ActionResult<ApiResult<AuthUser>> Profile()
+        {
+            var result = new ApiResult<User>();
+            var claim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+            if (!claim.IsNull() && int.TryParse(claim.Value, out var id))
+            {
+                var u = _userService.GetUserById(id);
+                if (!u.IsNull())
+                {
+                    result.Success = true;
+                    result.Result = u.ToAuthUser("");
+                    return Ok(result);
+                }
+            }
+            result.Success = false;
+            result.Message = "Invalid request, please login first.";
+            return BadRequest(result);
         }
     }
 }

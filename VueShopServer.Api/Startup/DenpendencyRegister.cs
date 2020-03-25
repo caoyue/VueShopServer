@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using VueShopServer.Api.Data;
 
-namespace VueShopServer.Api.Utils
+namespace VueShopServer.Api
 {
     public static class DependencyRegister
     {

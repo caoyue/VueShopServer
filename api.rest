@@ -1,4 +1,4 @@
-@BaseApi = https://localhost:5001/api
+@BaseApi = http://localhost:5001/api
 @Username = test
 @Password = 111111
 @Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEiLCJuYmYiOjE1ODQ1MDM1MzQsImV4cCI6MTU4NTEwODMzNCwiaWF0IjoxNTg0NTAzNTM0fQ.GTBBYmoW0pJEC8G4Mjy316QAKpyq5J4KBEfQ2UBkHH4
@@ -44,5 +44,5 @@ content-type: application/json
 Authorization: Bearer {{Token}}
 
 
-### stuff contenr
+### page content
 GET {{BaseApi}}/page/tag/home HTTP/1.1

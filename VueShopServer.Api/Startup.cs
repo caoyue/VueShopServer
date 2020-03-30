@@ -30,12 +30,6 @@ namespace VueShopServer.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                // use https
-                app.UseHsts();
-                app.UseHttpsRedirection();
-            }
 
             app.UseRouting();
 
